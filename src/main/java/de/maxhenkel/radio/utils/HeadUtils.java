@@ -27,7 +27,7 @@ public class HeadUtils {
         ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
         CompoundTag tag = stack.getOrCreateTag();
 
-        MutableComponent nameComponent = new TextComponent("Radiohead");
+        MutableComponent nameComponent = new TextComponent(itemName);
 
         ListTag lore = new ListTag();
         for (int i = 0; i < loreComponents.size(); i++) {

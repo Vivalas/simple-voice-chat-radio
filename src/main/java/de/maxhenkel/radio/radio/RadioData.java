@@ -128,7 +128,7 @@ public class RadioData {
     }
 
     private static ItemStack createRadio(RadioData radioData) {
-        return HeadUtils.createHead(RADIO_NAME, Collections.singletonList(new TextComponent("Radiohead")), radioData.toGameProfile());
+        return HeadUtils.createHead(RADIO_NAME, Collections.singletonList(new TextComponent(radioData.stationName)), radioData.toGameProfile());
     }
 
     public ItemStack toItemWithNoId() {

@@ -28,7 +28,6 @@ public class RadioCommands {
             return 1;
         }))));
 
-        dispatcher.register(literalBuilder);
     }
 
 
