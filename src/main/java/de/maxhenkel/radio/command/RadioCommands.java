@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.maxhenkel.radio.Radio;
 import de.maxhenkel.radio.radio.RadioData;
-import net.minecraft.commands.CommandBuildContext;
+//import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class RadioCommands {
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext ctx, Commands.CommandSelection environment) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> literalBuilder = Commands.literal("radio")
                 .requires((commandSource) -> commandSource.hasPermission(Radio.SERVER_CONFIG.commandPermissionLevel.get()));
 
@@ -31,4 +31,6 @@ public class RadioCommands {
         dispatcher.register(literalBuilder);
     }
 
+
 }
+

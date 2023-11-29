@@ -11,12 +11,10 @@ import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.Decoder;
 import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.SampleBuffer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.Vec3i;
-
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import javax.annotation.Nullable;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -28,7 +26,7 @@ public class RadioStream implements Supplier<short[]> {
 
     private final RadioData radioData;
     private final UUID id;
-    private final ServerLevel serverLevel;
+    private final ServerWorld serverLevel;
     private final BlockPos position;
     @Nullable
     private LocationalAudioChannel channel;
@@ -41,7 +39,7 @@ public class RadioStream implements Supplier<short[]> {
     @Nullable
     private StreamConverter streamConverter;
 
-    public RadioStream(RadioData radioData, ServerLevel serverLevel, BlockPos position) {
+    public RadioStream(RadioData radioData, ServerWorld serverLevel, BlockPos position) {
         this.radioData = radioData;
         this.id = radioData.getId();
         this.serverLevel = serverLevel;
@@ -115,7 +113,7 @@ public class RadioStream implements Supplier<short[]> {
         return position;
     }
 
-    public ServerLevel getServerLevel() {
+    public ServerWorld getServerLevel() {
         return serverLevel;
     }
 
@@ -168,8 +166,21 @@ public class RadioStream implements Supplier<short[]> {
     private long lastParticle = 0L;
 
     public void spawnParticle() {
-        return;
-
+        if (!Radio.SERVER_CONFIG.showMusicParticles.get()) {
+            return;
+        }
+        long time = System.currentTimeMillis();
+        if (time - lastParticle < Radio.SERVER_CONFIG.musicParticleFrequency.get()) {
+            return;
+        }
+        lastParticle = time;
+        serverLevel.getServer().execute(() -> {
+            Vec3d vec3 = Vec3d.ofBottomCenter(position).add(0D, 1D, 0D);
+            serverLevel.getPlayers().stream().filter(player -> player.getPos().distanceTo(position.getCenter()) <= 32D).forEach(player -> {
+                float random = (float) serverLevel.getRandom().nextInt(4) / 24F;
+                serverLevel.spawnParticles(ParticleTypes.NOTE, vec3.getX(), vec3.getY(), vec3.getZ(), 0, random, 0D, 0D, 1D);
+            });
+        });
     }
 
     private long lastCheck;

@@ -5,7 +5,7 @@ import de.maxhenkel.radio.command.RadioCommands;
 import de.maxhenkel.radio.config.ServerConfig;
 import de.maxhenkel.radio.events.LifecycleEvents;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -23,7 +23,7 @@ public class Radio implements ModInitializer {
         SERVER_CONFIG = ConfigBuilder.build(FabricLoader.getInstance().getConfigDir().resolve(MODID).resolve("radio.properties"), ServerConfig::new);
 
         ServerLifecycleEvents.SERVER_STOPPING.register(LifecycleEvents::onServerStopping);
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> RadioCommands.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register(RadioCommands::register);
         ServerChunkEvents.CHUNK_UNLOAD.register(LifecycleEvents::onChunkUnload);
     }
 }
